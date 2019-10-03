@@ -34,7 +34,7 @@ func (p *pointRepo) Fetch() ([]*model.Point, error) {
 		if err != nil {
 			return nil, err
 		}
-		hight, err := strconv.ParseFloat(record[2], 64)
+		high, err := strconv.ParseFloat(record[2], 64)
 		if err != nil {
 			return nil, err
 		}
@@ -58,7 +58,7 @@ func (p *pointRepo) Fetch() ([]*model.Point, error) {
 		point := model.Point{
 			Date:     date,
 			Open:     open,
-			High:     hight,
+			High:     high,
 			Low:      low,
 			Close:    close,
 			AdjClose: adjClose,

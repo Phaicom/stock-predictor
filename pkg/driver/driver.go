@@ -6,12 +6,10 @@ import (
 	"os"
 )
 
-// DB ...
 type CSV struct {
 	Records [][]string
 }
 
-// DBConn ...
 var csvOpen = &CSV{}
 
 func OpenCSV(name string) *CSV {
