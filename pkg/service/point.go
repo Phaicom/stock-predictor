@@ -3,6 +3,7 @@ package service
 import (
 	"log"
 	"math"
+	"sync"
 
 	"github.com/phaicom/stock-predictor/pkg/model"
 
@@ -26,13 +27,21 @@ func (s *pointService) GetClosePriceProb(size int, diff float64) (probHight floa
 	}
 
 	closePoints := [][]*model.Point{}
+	var wg sync.WaitGroup
+	var mu sync.Mutex
 	for i := range points {
-		pointSet := findClosePriceSet(points[i:], size, diff)
-		if len(pointSet) == 0 {
-			continue
-		}
-		closePoints = append(closePoints, pointSet)
+		wg.Add(1)
+		go func(i int) {
+			pointSet := findClosePriceSet(points[i:], size, diff)
+			if len(pointSet) > 0 {
+				mu.Lock()
+				closePoints = append(closePoints, pointSet)
+				mu.Unlock()
+			}
+			wg.Done()
+		}(i)
 	}
+	wg.Wait()
 
 	// Toubleshoot
 	// for _, ps := range closePoints {
