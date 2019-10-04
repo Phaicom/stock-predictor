@@ -13,7 +13,7 @@ before_script:
   - go install github.com/mattn/goveralls
 script:
   - go test -v -covermode=count -coverprofile=coverage.out ./...
-  - go test -race -coverprofile=coverage.txt -covermode=atomic
+  - go test -race -coverprofile=coverage.txt -covermode=atomic ./...
   - goveralls -coverprofile=coverage.out -service travis-ci -repotoken $COVERALLS_TOKEN
 after_success:
   - bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN
