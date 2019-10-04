@@ -1,22 +1,65 @@
 package main
 
 import (
+	"encoding/csv"
 	"fmt"
 	"log"
+	"os"
+	"strconv"
+
+	"github.com/phaicom/stock-predictor/pkg/model"
+	"github.com/phaicom/stock-predictor/pkg/service"
 
 	"github.com/phaicom/stock-predictor/pkg/driver"
 	"github.com/phaicom/stock-predictor/pkg/repository/point"
 )
 
 func main() {
-	csv := driver.OpenCSV("assets/KBANK.BK.csv")
-	pointRepo := point.NewPointRepo(csv)
-	points, err := pointRepo.Fetch()
+	csvStock := driver.OpenCSV("assets/kbank-4923.csv")
+	pointRepo := point.NewPointRepo(csvStock)
+	pointService := service.NewPointService(&pointRepo)
+	probHight, probLow := pointService.GetClosePriceProb(5, 7.0)
+	fmt.Printf("Higher: %v percent, Lower: %v percent\n", probHight, probLow)
+
+	// Mock for creating difference file size
+	// createCSV(points, 100)
+	// createCSV(points, 500)
+	// createCSV(points, 1000)
+	// createCSV(points, 2500)
+	// createCSV(points, 4923)
+}
+
+// Mock for creating difference file size
+func createCSV(points []*model.Point, size int) {
+	name := fmt.Sprintf("assets/kbank-%s.csv", strconv.Itoa(size))
+	size++
+	file, err := os.Create(name)
 	if err != nil {
 		log.Fatalln(err)
 	}
+	defer file.Close()
 
-	for _, point := range points {
-		fmt.Printf("point: %+v\n", point)
+	writer := csv.NewWriter(file)
+	defer writer.Flush()
+
+	for _, point := range points[:size] {
+		open := fmt.Sprintf("%f", point.Open)
+		high := fmt.Sprintf("%f", point.High)
+		low := fmt.Sprintf("%f", point.Low)
+		close := fmt.Sprintf("%f", point.Close)
+		adjClose := fmt.Sprintf("%f", point.AdjClose)
+		volumn := fmt.Sprintf("%d", point.Volume)
+		err := writer.Write([]string{
+			point.Date.String()[:10],
+			open,
+			high,
+			low,
+			close,
+			adjClose,
+			volumn,
+		})
+		if err != nil {
+			log.Fatalln(err)
+		}
 	}
 }
