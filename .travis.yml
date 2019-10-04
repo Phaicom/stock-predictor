@@ -9,13 +9,7 @@ git:
 install: true
 notifications:
   email: false
-addons:
-  sonarcloud:
-    organization: phaicom
-    token:
-      secure: $SONAR_TOKEN # encrypted value of your token
 script:
   - go test -race -coverprofile=coverage.txt -covermode=atomic ./...
-  - sonar-scanner
 after_success:
   - bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN
