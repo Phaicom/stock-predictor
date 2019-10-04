@@ -22,6 +22,7 @@ func main() {
 	fmt.Printf("Higher: %v percent, Lower: %v percent\n", probHight, probLow)
 
 	// Mock for creating difference file size
+	// points, _ := pointRepo.Fetch()
 	// createCSV(points, 100)
 	// createCSV(points, 500)
 	// createCSV(points, 1000)
@@ -32,7 +33,6 @@ func main() {
 // Mock for creating difference file size
 func createCSV(points []*model.Point, size int) {
 	name := fmt.Sprintf("assets/kbank-%s.csv", strconv.Itoa(size))
-	size++
 	file, err := os.Create(name)
 	if err != nil {
 		log.Fatalln(err)
