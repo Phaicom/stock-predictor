@@ -9,6 +9,7 @@ git:
 install: true
 notifications:
   email: false
+  slack: $SLACK_TOKEN
 script:
   - go test -race -coverprofile=coverage.txt -covermode=atomic ./...
 after_success:
