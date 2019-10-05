@@ -1,7 +1,6 @@
 package service
 
 import (
-	"log"
 	"math"
 	"sync"
 
@@ -20,10 +19,10 @@ func NewPointService(repo *repository.PointRepo) PointService {
 	}
 }
 
-func (s *pointService) GetClosePriceProb(size int, diff float64) (probHight float64, probLow float64) {
+func (s *pointService) GetClosePriceProb(size int, diff float64) (count int, probHight float64, probLow float64, err error) {
 	points, err := (*s.Repo).Fetch()
 	if err != nil {
-		log.Fatalln(err)
+		return
 	}
 
 	closePoints := [][]*model.Point{}
@@ -66,6 +65,8 @@ func (s *pointService) GetClosePriceProb(size int, diff float64) (probHight floa
 	if len(closePoints) == 0 {
 		return
 	}
+
+	count = len(closePoints)
 	probHight = (float64(higher) * 100) / float64(len(closePoints))
 	probLow = 100 - probHight
 	return

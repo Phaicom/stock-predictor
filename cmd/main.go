@@ -7,19 +7,18 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/phaicom/stock-predictor/pkg/model"
-	"github.com/phaicom/stock-predictor/pkg/service"
-
 	"github.com/phaicom/stock-predictor/pkg/driver"
+	"github.com/phaicom/stock-predictor/pkg/model"
 	"github.com/phaicom/stock-predictor/pkg/repository/point"
+	"github.com/phaicom/stock-predictor/pkg/service"
 )
 
 func main() {
-	csvStruct, _ := driver.OpenCSV("assets/kbank-4923.csv")
+	csvStruct, _ := driver.OpenCSV("assets/kbank-1000.csv")
 	pointRepo := point.NewPointRepo(csvStruct)
 	pointService := service.NewPointService(&pointRepo)
-	probHight, probLow := pointService.GetClosePriceProb(5, 7.0)
-	fmt.Printf("Higher: %v percent, Lower: %v percent\n", probHight, probLow)
+	count, probHight, probLow, _ := pointService.GetClosePriceProb(5, 7.0)
+	fmt.Printf("Count: %v, Higher: %v percent, Lower: %v percent\n", count, probHight, probLow)
 
 	// Mock for creating difference file size
 	// points, _ := pointRepo.Fetch()

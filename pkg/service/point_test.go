@@ -9,6 +9,22 @@ import (
 	"github.com/phaicom/stock-predictor/pkg/service"
 )
 
+func TestServicePoint(t *testing.T) {
+	csvStruct, _ := driver.OpenCSV("../../assets/kbank-1000.csv")
+
+	t.Run("Pass", func(t *testing.T) {
+		pointRepo := point.NewPointRepo(csvStruct)
+		pointService := service.NewPointService(&pointRepo)
+		count, _, _, err := pointService.GetClosePriceProb(5, 7.0)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		if count != 239 {
+			t.Errorf("Count value mismatch")
+		}
+	})
+}
+
 func BenchmarkPointService(b *testing.B) {
 	files := []struct {
 		name string
