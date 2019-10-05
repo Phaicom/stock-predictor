@@ -22,14 +22,14 @@ func TestRepoPoint(t *testing.T) {
 
 	for i := 0; i < len(csvStruct.Records[0]); i++ {
 		t.Run(fmt.Sprintf("Fail-%d", i), func(t *testing.T) {
-			csvTest := *csvStruct
-			csvTest.Records[0][i] = "2538%$--0"
-			pointRepo := point.NewPointRepo(&csvTest)
+			temp := csvStruct.Records[0][i]
+			csvStruct.Records[0][i] = "2538%$--0"
+			pointRepo := point.NewPointRepo(csvStruct)
 			_, err := pointRepo.Fetch()
 			if err == nil {
 				t.Errorf(err.Error())
 			}
+			csvStruct.Records[0][i] = temp
 		})
 	}
-
 }
