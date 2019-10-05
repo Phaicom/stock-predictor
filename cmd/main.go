@@ -15,8 +15,8 @@ import (
 )
 
 func main() {
-	csvStock := driver.OpenCSV("assets/kbank-4923.csv")
-	pointRepo := point.NewPointRepo(csvStock)
+	csvStruct, _ := driver.OpenCSV("assets/kbank-4923.csv")
+	pointRepo := point.NewPointRepo(csvStruct)
 	pointService := service.NewPointService(&pointRepo)
 	probHight, probLow := pointService.GetClosePriceProb(5, 7.0)
 	fmt.Printf("Higher: %v percent, Lower: %v percent\n", probHight, probLow)

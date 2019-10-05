@@ -2,7 +2,8 @@ package driver
 
 import (
 	"encoding/csv"
-	"log"
+	"errors"
+	"fmt"
 	"os"
 )
 
@@ -10,19 +11,19 @@ type CSV struct {
 	Records [][]string
 }
 
-var csvOpen = &CSV{}
-
-func OpenCSV(name string) *CSV {
+func OpenCSV(name string) (csvStruct *CSV, err error) {
 	csvfile, err := os.Open(name)
 	if err != nil {
-		log.Fatalln("Couldn't open the csv file", err)
+		err = errors.New(fmt.Sprintln("Couldn't open the csv file", err))
+		return
 	}
 	defer csvfile.Close()
 
 	records, err := csv.NewReader(csvfile).ReadAll()
 	if err != nil {
-		log.Fatal(err)
+		return
 	}
-	csvOpen.Records = records[1:]
-	return csvOpen
+	csvStruct = &CSV{}
+	csvStruct.Records = records[1:]
+	return
 }

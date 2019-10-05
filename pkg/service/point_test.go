@@ -20,8 +20,8 @@ func BenchmarkPointService(b *testing.B) {
 
 	for _, file := range files {
 		b.Run(fmt.Sprintf("%s", file.name), func(b *testing.B) {
-			csvStock := driver.OpenCSV("../../assets/" + file.name + ".csv")
-			pointRepo := point.NewPointRepo(csvStock)
+			csvStruct, _ := driver.OpenCSV("../../assets/" + file.name + ".csv")
+			pointRepo := point.NewPointRepo(csvStruct)
 			pointService := service.NewPointService(&pointRepo)
 			for i := 0; i < b.N; i++ {
 				pointService.GetClosePriceProb(5, 7.0)
