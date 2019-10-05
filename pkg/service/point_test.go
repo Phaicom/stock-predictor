@@ -46,6 +46,17 @@ func TestServicePoint(t *testing.T) {
 			}
 		})
 	}
+
+	t.Run("Fail-RepoFetch", func(t *testing.T) {
+		csvStruct, _ := driver.OpenCSV("../../assets/kbank-500.csv")
+		csvStruct.Records[0][0] = "hello, world!"
+		pointRepo := point.NewPointRepo(csvStruct)
+		pointService := service.NewPointService(&pointRepo)
+		_, _, _, err := pointService.GetClosePriceProb(5, 7.0)
+		if err == nil {
+			t.Errorf(err.Error())
+		}
+	})
 }
 
 func BenchmarkPointService(b *testing.B) {

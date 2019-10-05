@@ -32,4 +32,15 @@ func TestRepoPoint(t *testing.T) {
 			csvStruct.Records[0][i] = temp
 		})
 	}
+
+	t.Run("Fail-null", func(t *testing.T) {
+		temp := csvStruct.Records[0][1]
+		csvStruct.Records[0][1] = "null"
+		pointRepo := point.NewPointRepo(csvStruct)
+		_, err := pointRepo.Fetch()
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		csvStruct.Records[0][1] = temp
+	})
 }
