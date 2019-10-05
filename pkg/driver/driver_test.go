@@ -2,6 +2,8 @@ package driver_test
 
 import (
 	"fmt"
+	"io/ioutil"
+	"os"
 	"testing"
 
 	"github.com/phaicom/stock-predictor/pkg/driver"
@@ -42,16 +44,16 @@ func TestOpenCSV(t *testing.T) {
 		})
 	}
 
-	// t.Run("Fail-BadCSV", func(t *testing.T) {
-	// 	name := "kbank-string.csv"
-	// 	desc := []byte("name,age\njohn,13,1995")
-	// 	f, _ := os.Create(name)
-	// 	defer f.Close()
-	// 	ioutil.WriteFile(name, desc, 0644)
-	// 	_, err := driver.OpenCSV(name)
-	// 	os.Remove(name)
-	// 	if err == nil {
-	// 		t.Errorf(err.Error())
-	// 	}
-	// })
+	t.Run("Fail-BadCSV", func(t *testing.T) {
+		name := "kbank-string.csv"
+		desc := []byte("name,age\njohn,13,1995")
+		f, _ := os.Create(name)
+		defer f.Close()
+		ioutil.WriteFile(name, desc, 0644)
+		_, err := driver.OpenCSV(name)
+		os.Remove(name)
+		if err == nil {
+			t.Errorf(err.Error())
+		}
+	})
 }
