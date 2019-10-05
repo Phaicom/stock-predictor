@@ -30,7 +30,7 @@ coverage:
     slack:
       default:
         url: "secret:xsEyHn6JhwSPk6OQGofMOypARBwWgGlLE6gk4ph7mUGyi7sQw+Qp07bQI1Jks0d8+gjNWzremtDShwDmJv6UiEjL9NT6vEz0Whf8lr416EUFll+8A1FwHqgskLgbbBzIG4bYESlwVBZL4euVp7rHu3+myMm+SVwxbtGN9AX9Yhc="
-        threshold: 1%
+        # threshold: 1%
 			  only_pulls: false
         branches: null
         flags: null
