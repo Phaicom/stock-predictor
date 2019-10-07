@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
+	"regexp"
 	"strconv"
 
 	"github.com/phaicom/stock-predictor/pkg/driver"
@@ -14,11 +16,23 @@ import (
 )
 
 func main() {
-	csvStruct, _ := driver.OpenCSV("assets/kbank-4923.csv")
+	fmt.Println("--File List--")
+	files := listFile()
+	for _, file := range files {
+		fmt.Println(file)
+	}
+	fmt.Println("-------------")
+	total := ""
+	fmt.Print("Enter: ")
+	fmt.Scanln(&total)
+	if total == "" {
+		total = "4923"
+	}
+	csvStruct, _ := driver.OpenCSV("assets/kbank-" + total + ".csv")
 	pointRepo := point.NewPointRepo(csvStruct)
 	pointService := service.NewPointService(&pointRepo)
 	count, probHight, probLow, _ := pointService.GetClosePriceProb(5, 7.0)
-	fmt.Printf("Count: %v, Higher: %v percent, Lower: %v percent\n", count, probHight, probLow)
+	fmt.Printf("Total: %s\tCount: %v record(s)\nHigher: %.2f percent\tLower: %.2f percent\n", total, count, probHight, probLow)
 
 	// Mock for creating difference file size
 	// points, _ := pointRepo.Fetch()
@@ -27,6 +41,25 @@ func main() {
 	// createCSV(points, 1000)
 	// createCSV(points, 2500)
 	// createCSV(points, 4923)
+}
+
+func listFile() []string {
+	var files []string
+
+	root := "assets"
+	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+		r, _ := regexp.Compile("kbank-\\d*")
+		if ok := r.MatchString(path); ok {
+			file := r.FindString(path)
+
+			files = append(files, file)
+		}
+		return nil
+	})
+	if err != nil {
+		panic(err)
+	}
+	return files
 }
 
 // Mock for creating difference file size
